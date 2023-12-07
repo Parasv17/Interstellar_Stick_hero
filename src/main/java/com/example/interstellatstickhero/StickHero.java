@@ -5,6 +5,25 @@ public class StickHero implements serializable{
     private boolean isFlipped;
     private int score;
     private int cherries;
+    private boolean moving;
+    private boolean isRevived;
+
+    public boolean isMoving() {
+        return moving;
+    }
+
+    public void setMoving(boolean moving) {
+        this.moving = moving;
+    }
+
+    public boolean isRevived() {
+        return isRevived;
+    }
+
+    public void setRevived(boolean revived) {
+        isRevived = revived;
+    }
+
     private int PowerUp;
     private int positionX;
 
@@ -73,5 +92,12 @@ public class StickHero implements serializable{
 
     public void setPositionX(int positionX) {
         this.positionX = positionX;
+    }
+
+    public void increaseStickLength(int i) {
+        if(!isFlipped){
+            pole.setLength(pole.getLength()+i);
+        }
+
     }
 }
