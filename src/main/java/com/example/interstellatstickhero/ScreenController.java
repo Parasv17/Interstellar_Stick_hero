@@ -1,21 +1,17 @@
 package com.example.interstellatstickhero;
 
-import javafx.event.ActionEvent;
-import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
-import javafx.scene.control.Label;
 import javafx.scene.input.MouseEvent;
 import javafx.stage.Stage;
 
 import java.io.IOException;
-import javafx.scene.Node;
 
 //import static com.sun.org.apache.xalan.internal.xsltc.compiler.util.Type.Node;
 
-public class HelloController {
+public class ScreenController {
     private Stage stage;
     private Scene scene;
     private Parent root;
