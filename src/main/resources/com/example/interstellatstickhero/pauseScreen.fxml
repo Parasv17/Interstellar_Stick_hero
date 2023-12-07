@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.image.Image?>
+<?import javafx.scene.image.ImageView?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.shape.Rectangle?>
+<?import javafx.scene.text.Font?>
+
+
+<AnchorPane prefHeight="720.0" prefWidth="1280.0" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.example.interstellatstickhero.HelloController">
+   <children>
+      <ImageView fitHeight="721.0" fitWidth="1281.0" pickOnBounds="true" preserveRatio="true">
+         <image>
+            <Image url="@space1%20(1).png" />
+         </image>
+      </ImageView>
+      <Rectangle arcHeight="5.0" arcWidth="5.0" fill="#0003058c" height="573.0" layoutX="232.0" layoutY="81.0" stroke="BLACK" strokeType="INSIDE" strokeWidth="0.0" width="817.0" />
+      <Label contentDisplay="CENTER" layoutX="353.0" layoutY="136.0" prefHeight="68.0" prefWidth="575.0" text="GAME PAUSED" textFill="#fcf9f9">
+         <font>
+            <Font name="ROGFonts-Regular" size="62.0" />
+         </font>
+      </Label>
+      <Label layoutX="447.0" layoutY="222.0" text="SCORE" textFill="#ffd01c">
+         <font>
+            <Font name="ROGFonts-Regular" size="47.0" />
+         </font>
+      </Label>
+      <Label layoutX="711.0" layoutY="213.0" prefHeight="86.0" prefWidth="90.0" text="12" textFill="#ffd01c">
+         <font>
+            <Font name="STHupo" size="71.0" />
+         </font>
+      </Label>
+      <ImageView fitHeight="80.0" fitWidth="156.0" layoutX="542.0" layoutY="299.0" pickOnBounds="true" preserveRatio="true">
+         <image>
+            <Image url="@6640_prev_ui.png" />
+         </image>
+      </ImageView>
+      <Label layoutX="730.0" layoutY="293.0" text="4" textFill="WHITE">
+         <font>
+            <Font name="Rockwell Extra Bold" size="77.0" />
+         </font>
+      </Label>
+      <ImageView fitHeight="150.0" fitWidth="200.0" layoutX="363.0" layoutY="418.0" onMouseClicked="#switchtoMainScreen" pickOnBounds="true" preserveRatio="true">
+         <image>
+            <Image url="@buttons-150552_640%202.png" />
+         </image>
+      </ImageView>
+      <ImageView fitHeight="150.0" fitWidth="200.0" layoutX="783.0" layoutY="425.0" onMouseClicked="#switchtoHomeScreen" pickOnBounds="true" preserveRatio="true">
+         <image>
+            <Image url="@buttons-150552_640%203.png" />
+         </image>
+      </ImageView>
+   </children>
+</AnchorPane>
