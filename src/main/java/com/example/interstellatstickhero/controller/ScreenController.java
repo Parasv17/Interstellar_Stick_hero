@@ -1,4 +1,4 @@
-package com.example.interstellatstickhero;
+package com.example.interstellatstickhero.controller;
 
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Node;

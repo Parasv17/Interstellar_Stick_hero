@@ -6,4 +6,6 @@ module com.example.interstellatstickhero {
 
     opens com.example.interstellatstickhero to javafx.fxml;
     exports com.example.interstellatstickhero;
+    exports com.example.interstellatstickhero.controller;
+    opens com.example.interstellatstickhero.controller to javafx.fxml;
 }

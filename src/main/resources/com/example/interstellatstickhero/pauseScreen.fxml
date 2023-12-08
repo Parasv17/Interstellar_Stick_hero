@@ -7,7 +7,7 @@
 <?import javafx.scene.shape.Rectangle?>
 <?import javafx.scene.text.Font?>
 
-<AnchorPane prefHeight="419.0" prefWidth="745.0" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.example.interstellatstickhero.ScreenController">
+<AnchorPane prefHeight="419.0" prefWidth="745.0" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.example.interstellatstickhero.controller.ScreenController">
    <children>
       <ImageView fitHeight="419.0" fitWidth="745.0" pickOnBounds="true" preserveRatio="true">
          <image>

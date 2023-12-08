@@ -1,5 +1,7 @@
 package com.example.interstellatstickhero;
 
+import com.example.interstellatstickhero.controller.GameController;
+
 import java.io.Serializable;
 
 public class playGame implements Serializable {
