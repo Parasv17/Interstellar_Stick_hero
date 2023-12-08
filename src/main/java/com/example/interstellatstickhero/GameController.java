@@ -69,6 +69,7 @@ public class GameController {
         jaadu= new StickHero(Hero,this);
         redStick= new Stick(stick,this);
        resetAssets();
+
     }
 
     public void handleMouseClicked(MouseEvent event) {
