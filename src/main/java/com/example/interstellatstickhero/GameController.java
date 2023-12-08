@@ -145,6 +145,7 @@ public class GameController {
         // Play the timeline
         timeline.play();
         movehero();
+        canrotate=true;
 
     }
 

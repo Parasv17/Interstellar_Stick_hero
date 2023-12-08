@@ -31,6 +31,7 @@ public class Stick implements serializable{
         this.length = length;
     }
 
+
     public boolean isPowerUp() {
         return isPowerUp;
     }
