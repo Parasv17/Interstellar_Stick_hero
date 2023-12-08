@@ -7,7 +7,7 @@ import javafx.scene.shape.Rectangle;
 public class GameController {
 
 
-//    private final StickHero stickHero;
+    //    private final StickHero stickHero;
     @FXML
     private Rectangle stick;
     private boolean isIncreasing;
@@ -24,22 +24,22 @@ public class GameController {
 //        if (stickHero.isMoving()) {
 //            return;
 //        } else {
-            isIncreasing = true;
+        isIncreasing = true;
 
-            // Start a thread to increase the stick length continuously
-            Thread increaseStickThread = new Thread(() -> {
-                while (isIncreasing) {
-                    increaseStickLength();
-                    try {
-                        Thread.sleep(50); // Adjust the delay based on your needs
-                    } catch (InterruptedException e) {
-                        e.printStackTrace();
-                    }
+        // Start a thread to increase the stick length continuously
+        Thread increaseStickThread = new Thread(() -> {
+            while (isIncreasing) {
+                increaseStickLength();
+                try {
+                    Thread.sleep(50); // Adjust the delay based on your needs
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
                 }
-            });
+            }
+        });
 
-            increaseStickThread.start();
-        }
+        increaseStickThread.start();
+    }
 //    }
 
     public void handleMouseReleased(MouseEvent event) {
@@ -49,7 +49,9 @@ public class GameController {
     private void increaseStickLength() {
         // Implement the logic to increase the stick length
 //        stickHero.increaseStickLength(5); // You can adjust the amount to increase
-        stick.setHeight(stick.getHeight()+2);
+        double newY = stick.getY() - 2; // Adjust the value to control the speed and direction
+        stick.setY(newY);
+        stick.setHeight(stick.getHeight() + 2);
 
     }
 }

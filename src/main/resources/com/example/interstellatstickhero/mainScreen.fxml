@@ -9,7 +9,7 @@
 
 <AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="419.0" prefWidth="745.0" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.example.interstellatstickhero.GameController">
     <children>
-        <ImageView fitHeight="419.0" fitWidth="898.0" pickOnBounds="true" preserveRatio="true">
+        <ImageView fitHeight="419.0" fitWidth="898.0" onMousePressed="#handleMousePressed" onMouseReleased="#handleMouseReleased" pickOnBounds="true" preserveRatio="true">
             <image>
                 <Image url="@main.png" />
             </image>
@@ -49,6 +49,6 @@
       </Label>
       <Rectangle arcHeight="5.0" arcWidth="5.0" fill="#000000b9" height="150.0" layoutX="255.0" layoutY="269.0" stroke="BLACK" strokeType="INSIDE" strokeWidth="0.0" width="107.0" />
       <Rectangle arcHeight="5.0" arcWidth="5.0" fill="#000000b9" height="150.0" layoutX="392.0" layoutY="269.0" stroke="BLACK" strokeType="INSIDE" strokeWidth="0.0" width="107.0" />
-      <Rectangle fx:id="stick" arcHeight="5.0" arcWidth="5.0" fill="DODGERBLUE" height="19.0" layoutX="260.0" layoutY="245.0" onMouseClicked="#handleMouseClicked" onMousePressed="#handleMousePressed" onMouseReleased="#handleMouseReleased" stroke="BLACK" strokeType="INSIDE" width="8.0" />
+      <Rectangle fx:id="stick" arcHeight="8.0" arcWidth="3.0" fill="#ff1f1f" height="50.0" layoutX="88.0" layoutY="191.0" onMousePressed="#handleMousePressed" onMouseReleased="#handleMouseReleased" stroke="BLACK" strokeType="INSIDE" width="7.0" />
     </children>
 </AnchorPane>
