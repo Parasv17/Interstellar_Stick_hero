@@ -49,6 +49,7 @@ public class GameController {
 
     @FXML
     private Rectangle stick;
+    private boolean canrotate=false;
     private Stick redStick;
 
     private int clickcount;
@@ -71,11 +72,18 @@ public class GameController {
     }
 
     public void handleMouseClicked(MouseEvent event) {
-        // Add your logic if needed
+        if(canrotate){
+            Rotate rotate = new Rotate();
+            rotate.setPivotY(jaadu.getJadu().getY() + jaadu.getJadu().getFitHeight()); // Set pivot point to the bottom of the stick
+            jaadu.getJadu().getTransforms().add(rotate);
+            rotate.setAngle(180);
+
+    }
     }
 
 
     public void handleMousePressed(MouseEvent event) {
+        canrotate=false;
         stickbuff = stick;
         isIncreasing = true;
 
@@ -236,6 +244,7 @@ public class GameController {
         transition.play();
         transition.setOnFinished(event -> {
             createNewPillar();
+            canrotate=false;
         });
     }
 
