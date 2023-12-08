@@ -1,6 +1,14 @@
 package com.example.interstellatstickhero;
 
+import javafx.scene.shape.Rectangle;
+
 public class Stick implements serializable{
+    private Rectangle StickRectangle;
+
+    public Stick(Rectangle stickRectangle) {
+        StickRectangle = stickRectangle;
+    }
+
     private int length ;
     private boolean isPowerUp;
 

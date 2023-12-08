@@ -2,14 +2,17 @@ package com.example.interstellatstickhero;
 
 //import javax.swing.text.html.ImageView;
 
+import javafx.animation.PauseTransition;
 import javafx.animation.TranslateTransition;
 import javafx.scene.image.ImageView;
 import javafx.util.Duration;
 
 public class StickHero implements serializable{
+    private GameController ControlledBy;
 
     private transient  ImageView jadu;
-    public StickHero(ImageView hero){
+    public StickHero(ImageView hero,GameController cont){
+        this.ControlledBy= cont;
         this.jadu= hero;
 
     }
@@ -59,6 +62,15 @@ public class StickHero implements serializable{
         TranslateTransition transition = new TranslateTransition(Duration.seconds(1), jadu);
         transition.setDelay(Duration.seconds(delaySeconds));
         transition.setByX(distance); // Move by the specified distance
+//        transition.setOnFinished(event -> );
+        transition.setOnFinished(event -> {
+            PauseTransition pause = new PauseTransition(Duration.millis(900));
+            pause.setOnFinished(delayedEvent -> {
+
+                ControlledBy.checkStickAlignment();
+            });
+            pause.play();
+        });
         transition.play();
     }
 
