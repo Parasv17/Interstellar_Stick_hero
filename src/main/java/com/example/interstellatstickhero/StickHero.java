@@ -55,8 +55,9 @@ public class StickHero implements serializable{
     public void flippedNTouchingPillar(boolean isFlipped, int positionX){
 
     }
-    public void moveHorizontally(double distance) {
+    public void moveHorizontally(double distance,double delaySeconds) {
         TranslateTransition transition = new TranslateTransition(Duration.seconds(1), jadu);
+        transition.setDelay(Duration.seconds(delaySeconds));
         transition.setByX(distance); // Move by the specified distance
         transition.play();
     }

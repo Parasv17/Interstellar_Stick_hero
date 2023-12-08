@@ -34,7 +34,7 @@
             <Font name="ROGFonts-Regular" size="61.0" />
          </font>
       </Label>
-          <ImageView fx:id="Hero" fitHeight="77.0" fitWidth="68.0" layoutX="27.0" layoutY="195.0" pickOnBounds="true" preserveRatio="true">
+        <ImageView fx:id="Hero" fitHeight="77.0" fitWidth="68.0" layoutX="38.0" layoutY="197.0" pickOnBounds="true" preserveRatio="true">
               <image>
                   <Image url="@char.png" />
               </image>
@@ -44,6 +44,6 @@
             <Font name="ROGFonts-Regular" size="39.0" />
          </font>
       </Label>
-      <Rectangle fx:id="stick" arcHeight="8.0" arcWidth="3.0" fill="#ff1f1f" height="50.0" layoutX="88.0" layoutY="191.0" onMousePressed="#handleMousePressed" onMouseReleased="#handleMouseReleased" stroke="BLACK" strokeType="INSIDE" width="7.0" />
+      <Rectangle fx:id="stick" arcHeight="8.0" arcWidth="3.0" fill="#ff1f1f" height="50.0" layoutX="99.0" layoutY="191.0" onMousePressed="#handleMousePressed" onMouseReleased="#handleMouseReleased" stroke="BLACK" strokeType="INSIDE" width="7.0" />
     </children>
 </AnchorPane>
