@@ -37,7 +37,7 @@
          </font>
       </Label>
       <Rectangle arcHeight="5.0" arcWidth="5.0" fill="#000000b9" height="150.0" layoutY="269.0" stroke="BLACK" strokeType="INSIDE" strokeWidth="0.0" width="107.0" />
-          <ImageView fitHeight="77.0" fitWidth="68.0" layoutX="27.0" layoutY="195.0" pickOnBounds="true" preserveRatio="true">
+          <ImageView fitHeight="77.0" fitWidth="68.0" layoutX="38.0" layoutY="197.0" pickOnBounds="true" preserveRatio="true">
               <image>
                   <Image url="@char.png" />
               </image>
@@ -47,8 +47,8 @@
             <Font name="ROGFonts-Regular" size="39.0" />
          </font>
       </Label>
-      <Rectangle arcHeight="5.0" arcWidth="5.0" fill="#000000b9" height="150.0" layoutX="255.0" layoutY="269.0" stroke="BLACK" strokeType="INSIDE" strokeWidth="0.0" width="107.0" />
+      <Rectangle arcHeight="5.0" arcWidth="5.0" fill="#000000b9" height="150.0" layoutX="240.0" layoutY="266.0" stroke="BLACK" strokeType="INSIDE" strokeWidth="0.0" width="107.0" />
       <Rectangle arcHeight="5.0" arcWidth="5.0" fill="#000000b9" height="150.0" layoutX="392.0" layoutY="269.0" stroke="BLACK" strokeType="INSIDE" strokeWidth="0.0" width="107.0" />
-      <Rectangle fx:id="stick" arcHeight="8.0" arcWidth="3.0" fill="#ff1f1f" height="50.0" layoutX="88.0" layoutY="191.0" onMousePressed="#handleMousePressed" onMouseReleased="#handleMouseReleased" stroke="BLACK" strokeType="INSIDE" width="7.0" />
+      <Rectangle fx:id="stick" arcHeight="8.0" arcWidth="3.0" fill="#ff1f1f" height="64.0" layoutX="100.0" layoutY="201.0" onMousePressed="#handleMousePressed" onMouseReleased="#handleMouseReleased" stroke="BLACK" strokeType="INSIDE" width="7.0" />
     </children>
 </AnchorPane>

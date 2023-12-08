@@ -1,17 +1,19 @@
 package com.example.interstellatstickhero.controller;
 
-import javafx.animation.Interpolator;
-import javafx.animation.RotateTransition;
-import javafx.animation.TranslateTransition;
+import javafx.animation.*;
 import javafx.fxml.FXML;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.shape.Rectangle;
+import javafx.scene.transform.Rotate;
 import javafx.util.Duration;
 
 import java.util.ArrayList;
 import java.util.List;
 
 public class GameController {
+
+    private Rectangle stickbuff;
+
 
     @FXML
     private Rectangle stick;
@@ -27,7 +29,9 @@ public class GameController {
         // Add your logic if needed
     }
 
+
     public void handleMousePressed(MouseEvent event) {
+        stickbuff = stick;
         isIncreasing = true;
 
         // Start a thread to increase the stick length continuously
@@ -53,6 +57,8 @@ public class GameController {
     }
 
     private void increaseStickLength() {
+
+
         // Implement the logic to increase the stick length
         double newY = stick.getY() - 2; // Adjust the value to control the speed and direction
         stick.setY(newY);
@@ -60,30 +66,27 @@ public class GameController {
     }
 
     private void dropStickAndAddNew() {
-        // Create a rotation animation for the falling stick
-        RotateTransition rotateTransition = new RotateTransition(Duration.seconds(1), stick);
-        rotateTransition.setByAngle(90); // Rotate by 90 degrees
-        rotateTransition.setInterpolator(Interpolator.EASE_BOTH);
+        // Set up a Rotate transform for the falling stick
+        Rotate rotate = new Rotate();
+        rotate.setPivotY(stick.getY() + stick.getHeight()); // Set pivot point to the bottom of the stick
+        stick.getTransforms().add(rotate);
+        rotate.setAngle(0); // Reset the angle to 0 before starting the animation
 
-        // Create a translation animation for the falling stick
-        TranslateTransition translateTransition = new TranslateTransition(Duration.seconds(1), stick);
-        translateTransition.setToY(98);
-        translateTransition.setToX(80);// Move to a certain height (adjust as needed)
-        translateTransition.setInterpolator(Interpolator.EASE_BOTH);
+        // Create a rotation animation for the falling stick using Timeline
+        Timeline timeline = new Timeline();
+
+        // KeyFrames for the rotation animation
+        KeyFrame rotateKeyFrame = new KeyFrame(Duration.ZERO, new KeyValue(rotate.angleProperty(), 0));
+        KeyFrame rotateEndKeyFrame = new KeyFrame(Duration.seconds(1), new KeyValue(rotate.angleProperty(), 90));
+
+        // Add the keyframes to the timeline
+        timeline.getKeyFrames().addAll(rotateKeyFrame, rotateEndKeyFrame);
 
         // Set up an event handler to trigger when animations are finished
-        translateTransition.setOnFinished(event -> {
-            // After the falling animation, spawn a new stick
-            //addNewStick();
-            // Reset the original stick properties
-//            stick.setY(300); // Adjust the initial Y position
-//            stick.setHeight(10); // Adjust the initial height
-//            stick.setRotate(0); // Reset rotation
-        });
+        timeline.setOnFinished(event -> addNewStick());
 
-        // Play both animations
-        rotateTransition.play();
-        translateTransition.play();
+        // Play the timeline
+        timeline.play();
     }
 
     private void addNewStick() {
