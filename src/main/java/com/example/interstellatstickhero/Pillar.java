@@ -1,21 +1,44 @@
 package com.example.interstellatstickhero;
 
+import javafx.animation.FadeTransition;
 import javafx.animation.TranslateTransition;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Rectangle;
+import javafx.scene.shape.StrokeType;
 import javafx.util.Duration;
+
+import java.util.Random;
+
 public class Pillar implements serializable{
-    private Rectangle pillarRectangle;
+    private transient Rectangle pillarRectangle;
     private int width;
     private int positionX;
+    private static final Random random = new Random();
 
-    public Pillar(int width, int positionX, int durationMillis) {
-        pillarRectangle = new Rectangle(width, 269, Color.BLUE);
-        pillarRectangle.setLayoutX(positionX);
-        pillarRectangle.setLayoutY(0);
-        TranslateTransition translateTransition = new TranslateTransition(Duration.millis(durationMillis), pillarRectangle);
-        translateTransition.setByX(-positionX);
-        translateTransition.play();
+    public Pillar(int positionX, int durationMillis) {
+        this.width = getRandomWidth(70, 150); // Random width between 70 and 150
+        this.positionX = positionX ;// Random distance between 40 and 100
+
+        pillarRectangle = new Rectangle(width, 150, Color.valueOf("#000000b9"));
+        pillarRectangle.setArcWidth(5.0);
+        pillarRectangle.setArcHeight(5.0);
+        pillarRectangle.setStroke(Color.BLACK);
+        pillarRectangle.setStrokeType(StrokeType.INSIDE);
+        pillarRectangle.setStrokeWidth(0.0);
+        pillarRectangle.setLayoutX(this.positionX);
+        pillarRectangle.setLayoutY(269.0);
+
+        FadeTransition fadeTransition = new FadeTransition(Duration.millis(durationMillis), pillarRectangle);
+        fadeTransition.setFromValue(0); // Start from fully transparent
+        fadeTransition.setToValue(1);   // End with fully opaque
+        fadeTransition.play();
+    }
+    private static int getRandomWidth(int min, int max) {
+        return random.nextInt(max - min + 1) + min;
+    }
+
+    private static int getRandomDistance(int min, int max) {
+        return random.nextInt(max - min + 1) + min;
     }
 
     private int bonusLength;
