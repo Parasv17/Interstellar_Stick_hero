@@ -34,7 +34,7 @@
             <Font name="ROGFonts-Regular" size="61.0" />
          </font>
       </Label>
-          <ImageView fitHeight="77.0" fitWidth="68.0" layoutX="27.0" layoutY="195.0" pickOnBounds="true" preserveRatio="true">
+          <ImageView fx:id="Hero" fitHeight="77.0" fitWidth="68.0" layoutX="27.0" layoutY="195.0" pickOnBounds="true" preserveRatio="true">
               <image>
                   <Image url="@char.png" />
               </image>

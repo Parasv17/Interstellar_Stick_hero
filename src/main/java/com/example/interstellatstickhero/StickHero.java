@@ -1,9 +1,30 @@
 package com.example.interstellatstickhero;
 
+//import javax.swing.text.html.ImageView;
+
+import javafx.animation.TranslateTransition;
+import javafx.scene.image.ImageView;
+import javafx.util.Duration;
+
 public class StickHero implements serializable{
+
+    private transient  ImageView jadu;
+    public StickHero(ImageView hero){
+        this.jadu= hero;
+
+    }
     private Stick pole;
     private boolean isFlipped;
     private int score;
+
+    public ImageView getJadu() {
+        return jadu;
+    }
+
+    public void setJadu(ImageView jadu) {
+        this.jadu = jadu;
+    }
+
     private int cherries;
     private boolean moving;
     private boolean isRevived;
@@ -33,6 +54,11 @@ public class StickHero implements serializable{
 
     public void flippedNTouchingPillar(boolean isFlipped, int positionX){
 
+    }
+    public void moveHorizontally(double distance) {
+        TranslateTransition transition = new TranslateTransition(Duration.seconds(1), jadu);
+        transition.setByX(distance); // Move by the specified distance
+        transition.play();
     }
 
     public void saveGame(){
