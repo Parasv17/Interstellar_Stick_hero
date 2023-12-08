@@ -155,6 +155,7 @@ public class GameController {
 
     @FXML
     private Rectangle stick;
+    private Stick redStick;
 
     private List<Rectangle> sticks;
     private boolean isIncreasing;
@@ -169,6 +170,7 @@ public class GameController {
         // Initialization logic here
         pillarStart();
         jaadu= new StickHero(Hero,this);
+        redStick= new Stick(stick,this);
        resetAssets();
     }
 
@@ -274,7 +276,7 @@ public class GameController {
     }
 
     public void checkStickAlignment() {
-        if (isStickAlignedWithNextPillar()) {
+        if(isStickAlignedWithNextPillar()) {
 
             removeOldPillar();
             move2ndPillar();

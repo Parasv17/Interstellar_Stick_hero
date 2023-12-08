@@ -4,13 +4,23 @@ import javafx.scene.shape.Rectangle;
 
 public class Stick implements serializable{
     private Rectangle StickRectangle;
+    private GameController ControlledBy;
 
-    public Stick(Rectangle stickRectangle) {
+    public Stick(Rectangle stickRectangle,GameController cont) {
+        this.ControlledBy= cont;
         StickRectangle = stickRectangle;
     }
 
     private int length ;
     private boolean isPowerUp;
+
+    public Rectangle getStickRectangle() {
+        return StickRectangle;
+    }
+
+    public void setStickRectangle(Rectangle stickRectangle) {
+        StickRectangle = stickRectangle;
+    }
 
     public int getLength() {
         return length;
