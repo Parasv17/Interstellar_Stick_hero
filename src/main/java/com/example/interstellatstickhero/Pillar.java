@@ -14,7 +14,26 @@ public class Pillar implements serializable{
     private int width;
     private int positionX;
     private static final Random random = new Random();
+    public Pillar(Pillar otherPillar) {
+        this.width = otherPillar.width;
+        this.positionX = otherPillar.positionX;
+        this.bonusLength = otherPillar.bonusLength;
+        this.bonusPositionX = otherPillar.bonusPositionX;
 
+        // Create a new Rectangle with the same properties
+        this.pillarRectangle = new Rectangle(
+                otherPillar.pillarRectangle.getWidth(),
+                otherPillar.pillarRectangle.getHeight(),
+                otherPillar.pillarRectangle.getFill());
+        this.pillarRectangle.setArcWidth(otherPillar.pillarRectangle.getArcWidth());
+        this.pillarRectangle.setArcHeight(otherPillar.pillarRectangle.getArcHeight());
+        this.pillarRectangle.setStroke(otherPillar.pillarRectangle.getStroke());
+        this.pillarRectangle.setStrokeType(otherPillar.pillarRectangle.getStrokeType());
+        this.pillarRectangle.setStrokeWidth(otherPillar.pillarRectangle.getStrokeWidth());
+        this.pillarRectangle.setLayoutX(otherPillar.pillarRectangle.getLayoutX());
+        this.pillarRectangle.setLayoutY(otherPillar.pillarRectangle.getLayoutY());
+        // Note: You might also want to copy other properties if they are used
+    }
     public Pillar(int positionX, int durationMillis) {
         this.width = getRandomWidth(70, 150); // Random width between 70 and 150
         this.positionX = positionX ;// Random distance between 40 and 100

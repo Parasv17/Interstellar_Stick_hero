@@ -117,15 +117,15 @@ public class GameController {
 
 
         // Implement the logic to increase the stick length
-        double newY = redStick.getY() - 5; // Adjust the value to control the speed and direction
-        redStick.setY(newY);
-        redStick.setHeight(stick.getHeight() + 5);
+        double newY = redStick.getStickRectangle().getY() - 5; // Adjust the value to control the speed and direction
+        redStick.getStickRectangle().setY(newY);
+        redStick.getStickRectangle().setHeight(stick.getHeight() + 5);
     }
 
     private void dropStickAndAddNew() {
         // Set up a Rotate transform for the falling stick
         Rotate rotate = new Rotate();
-        rotate.setPivotY(redStick.getY() + redStick.getHeight()); // Set pivot point to the bottom of the stick
+        rotate.setPivotY(redStick.getStickRectangle().getY() + redStick.getStickRectangle().getHeight()); // Set pivot point to the bottom of the stick
         redStick.getStickRectangle().getTransforms().add(rotate);
         rotate.setAngle(0); // Reset the angle to 0 before starting the animation
 
@@ -140,7 +140,7 @@ public class GameController {
         timeline.getKeyFrames().addAll(rotateKeyFrame, rotateEndKeyFrame);
 
         // Set up an event handler to trigger when animations are finished
-        timeline.setOnFinished(event -> addNewStick());
+        // timeline.setOnFinished(event -> resetStick());
 
         // Play the timeline
         timeline.play();
@@ -177,7 +177,14 @@ public class GameController {
     }
 
     private void movehero(){
-        double distanceToWalk = redStick.getStickRectangle().getHeight();
+        double distanceToWalk = p2.getPillarRectangle().getLayoutX()+ p2.getPillarRectangle().getWidth()-jaadu.getJadu().getFitWidth();
+        System.out.println("shoul dmmove to"+distanceToWalk);
+        if(!isStickAlignedWithNextPillar()){
+            System.out.println("shoul dmmove to"+distanceToWalk);
+            System.out.println("stick "+redStick.getStickRectangle().getHeight());
+            distanceToWalk=jaadu.getJadu().getLayoutX()+redStick.getStickRectangle().getHeight()+jaadu.getJadu().getFitWidth();
+            System.out.println("moving to"+distanceToWalk);
+        }
         jaadu.moveHorizontally(distanceToWalk, 1);
 
 
@@ -200,7 +207,7 @@ public class GameController {
     }
 
     private boolean isStickAlignedWithNextPillar() {
-        double diffInPillars= p2.getPillarRectangle().getLayoutX()-p2.getPillarRectangle().getWidth();
+        double diffInPillars= p2.getPillarRectangle().getLayoutX()-p1.getPillarRectangle().getWidth();
 
         if(redStick.getStickRectangle().getHeight()>diffInPillars && redStick.getStickRectangle().getHeight()<diffInPillars+ p2.getPillarRectangle().getWidth()){
             System.out.println("OK");
@@ -214,10 +221,30 @@ public class GameController {
     }
 
     private void moveHeroTo2ndPillar() {
-       TranslateTransition transition= new TranslateTransition(Duration.seconds(2),jaadu.getJadu());
-//       transition.setByX(p1.getPillarRectangle().getLayoutX()+p1.getPillarRectangle().getWidth()-jaadu.getJadu().getLayoutX()-jaadu.getJadu().getFitWidth());
-        transition.setToX(0);
-    transition.play();
+//       TranslateTransition transition= new TranslateTransition(Duration.seconds(2),jaadu.getJadu());
+////       transition.setByX(p1.getPillarRectangle().getLayoutX()+p1.getPillarRectangle().getWidth()-jaadu.getJadu().getLayoutX()-jaadu.getJadu().getFitWidth());
+//        transition.setToX(0);
+//    transition.play();
+        ImageView hero = jaadu.getJadu();
+
+        // Calculate the new layoutX position
+        double newLayoutX =(double) p2.getPillarRectangle().getWidth()-jaadu.getJadu().getFitWidth();
+//        double newLayoutX=;
+
+        // Create a Timeline for the animation
+        Timeline timeline = new Timeline();
+
+        // Define the KeyValue for the animation (animate layoutX to newLayoutX)
+        KeyValue keyValue = new KeyValue(hero.layoutXProperty(), newLayoutX);
+
+        // Define the KeyFrame using the KeyValue, setting the duration of the animation
+        KeyFrame keyFrame = new KeyFrame(Duration.seconds(2), keyValue);
+
+        // Add the KeyFrame to the Timeline
+        timeline.getKeyFrames().add(keyFrame);
+//        timeline.setOnFinished(event -> );
+//                // Play the animation
+        timeline.play();
 
     }
     private  void resetAssets(){
@@ -229,6 +256,8 @@ public class GameController {
         TranslateTransition transition = new TranslateTransition(Duration.seconds(2), p1.getPillarRectangle());
         transition.setByX(-500);
         transition.play();
+        transition.setOnFinished(event ->gamePane.getChildren().remove(p1.getPillarRectangle())
+        );
 
     }
 
@@ -249,39 +278,43 @@ public class GameController {
         });
     }
 
-    private void resetStick() {
+    public void resetStick() {
+
         redStick.getStickRectangle().setHeight(0);
-        // Set the stick's layout position to the right of the next pillar
-        redStick.getStickRectangle().setLayoutX(p1.getPillarRectangle().getLayoutX());
-
-        // Set the stick's vertical position (you may need to adjust this based on your game logic)
-        redStick.getStickRectangle().setLayoutY(redStick.getStickRectangle().getLayoutY());
-
-        // Set up a Rotate transform for the stick
         Rotate rotate = new Rotate();
         rotate.setPivotY(redStick.getStickRectangle().getY() + redStick.getStickRectangle().getHeight()); // Set pivot point to the bottom of the stick
         redStick.getStickRectangle().getTransforms().add(rotate);
-        rotate.setAngle(270);
-
-        // Set the stick's height to 0
-
-
-        // Reset the click count
+        rotate.setAngle(-90);
         clickcount = 0;
+    }
+    public void resetStick2(){
+//        redStick.getStickRectangle().setLayoutX(p1.getPillarRectangle().getWidth()-redStick.getStickRectangle().getWidth());
+//        redStick.getStickRectangle().setX(jaadu.getJadu().getLayoutX()+2*jaadu.getJadu().getFitWidth());
+        redStick.getStickRectangle().setX(0);
+
+
     }
 
 
 
     private void createNewPillar() {
         // Create and return a new pillar
-        p1 =(Pillar) p2; // Shift the current pillar to be the old pillar
+//        System.out.println("p1"+ p1);
+//        System.out.println("p2 "+(double)p2.getPillarRectangle().getWidth());
+        p1 =p2; // Shift the current pillar to be the old pillar
 
         int dist = random.nextInt(300-170 + 1) + 170 ;// Calculate the distance for the new pillar
-        Pillar newPillar = new Pillar(dist, 700); // Adjust duration as needed
-        gamePane.getChildren().add(newPillar.getPillarRectangle());
-        p2= (Pillar) newPillar;
-        System.out.println("addded nwe pillar!!!!!");
-        resetStick();
+        p2 = new Pillar(dist, 700); // Adjust duration as needed
+        gamePane.getChildren().add(p2.getPillarRectangle());
+
+
+//        System.out.println("addded nwe pillar!!!!!");
+//        System.out.println("p1"+ p1);
+//        System.out.println("'p2"+p2);
+        PauseTransition pause = new PauseTransition(Duration.millis(100));
+        pause.setOnFinished(event -> resetStick2()); // Call resetStick2 after the delay
+        pause.play(); // Start the pause
+//
 
     }
 

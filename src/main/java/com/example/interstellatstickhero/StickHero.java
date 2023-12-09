@@ -3,6 +3,7 @@ package com.example.interstellatstickhero;
 //import javax.swing.text.html.ImageView;
 
 import javafx.animation.PauseTransition;
+import javafx.animation.*;
 import javafx.animation.TranslateTransition;
 import javafx.scene.image.ImageView;
 import javafx.util.Duration;
@@ -58,20 +59,36 @@ public class StickHero implements serializable{
     public void flippedNTouchingPillar(boolean isFlipped, int positionX){
 
     }
-    public void moveHorizontally(double distance,double delaySeconds) {
-        TranslateTransition transition = new TranslateTransition(Duration.seconds(1), jadu);
-        transition.setDelay(Duration.seconds(delaySeconds));
-        transition.setByX(distance); // Move by the specified distance
-//        transition.setOnFinished(event -> );
-        transition.setOnFinished(event -> {
+    public void moveHorizontally(double distance, double delaySeconds) {
+        double newLayoutX =  distance; // Calculate the new layoutX position
+
+        // Create a Timeline for the animation
+        Timeline timeline = new Timeline();
+
+        // Set up the key values and key frames for the animation
+        KeyValue keyValue = new KeyValue(jadu.layoutXProperty(), newLayoutX);
+        KeyFrame keyFrame = new KeyFrame(Duration.seconds(1), keyValue); // Duration of 1 second for the animation
+
+        // Add the key frame to the timeline
+        timeline.getKeyFrames().add(keyFrame);
+
+        // Set a delay if needed
+        if (delaySeconds > 0) {
+            timeline.setDelay(Duration.seconds(delaySeconds));
+        }
+
+        // Set up action to perform after the animation finishes
+        timeline.setOnFinished(event -> {
             PauseTransition pause = new PauseTransition(Duration.millis(900));
             pause.setOnFinished(delayedEvent -> {
-
                 ControlledBy.checkStickAlignment();
+                ControlledBy.resetStick();
             });
             pause.play();
         });
-        transition.play();
+
+        // Start the animation
+        timeline.play();
     }
 
     public void saveGame(){

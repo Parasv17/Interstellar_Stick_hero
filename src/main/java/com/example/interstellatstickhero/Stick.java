@@ -4,8 +4,26 @@ import javafx.scene.shape.Rectangle;
 
 public class Stick implements serializable{
     private Rectangle StickRectangle;
+    private GameController ControlledBy;
 
-    public Stick(Rectangle stickRectangle) {
+    public Rectangle getStickRectangle() {
+        return StickRectangle;
+    }
+
+    public void setStickRectangle(Rectangle stickRectangle) {
+        StickRectangle = stickRectangle;
+    }
+
+    public GameController getControlledBy() {
+        return ControlledBy;
+    }
+
+    public void setControlledBy(GameController controlledBy) {
+        ControlledBy = controlledBy;
+    }
+
+    public Stick(Rectangle stickRectangle, GameController cont) {
+        this.ControlledBy= cont;
         StickRectangle = stickRectangle;
     }
 
