@@ -28,14 +28,27 @@ public class GameController {
 
     private boolean isFlipped = false;
 
+    public void switchtoMainScreen() throws IOException {
+        root = FXMLLoader.load(getClass().getResource("MainScreen.fxml"));
+        stage = (Stage) gamePane.getScene().getWindow(); // Assuming gamePane is part of the scene
+        scene = new Scene(root);
+        stage.setScene(scene);
+        stage.show();
 
 
+    }
+    public void switchtoHomeScreen() throws IOException {
+        root = FXMLLoader.load(getClass().getResource("homeScreen.fxml"));
+        stage = (Stage) gamePane.getScene().getWindow(); // Assuming gamePane is part of the scene
+        scene = new Scene(root);
+        stage.setScene(scene);
+        stage.show();
+
+
+    }
     public void switchtoPauseScreen(MouseEvent event) throws IOException {
         if(!isPaused){pauseGame();}
-        else {
-            resumeGame();
 
-        }
 //        root = FXMLLoader.load(getClass().getResource("pauseScreen.fxml"));
 //        stage=(Stage)((Node)event.getSource()).getScene().getWindow();
 //        scene= new Scene(root);
@@ -51,6 +64,8 @@ public class GameController {
 
     @FXML
     private Pane gamePane;
+
+    private boolean gameover=false;
 //
 
     private Rectangle stickbuff;
@@ -117,9 +132,10 @@ public class GameController {
         stickbuff = stick;
         isIncreasing = true;
 
+
         // Start a thread to increase the stick length continuously
         Thread increaseStickThread = new Thread(() -> {
-            while (isIncreasing && clickcount==0) {
+            while (isIncreasing && clickcount==0 && !gameover) {
                 increaseStickLength();
                 try {
                     Thread.sleep(40); // Adjust the delay based on your needs
@@ -145,6 +161,7 @@ public class GameController {
     private void increaseStickLength() {
 
 
+        redStick.getStickRectangle().setOpacity(1);
         // Implement the logic to increase the stick length
         double newY = redStick.getStickRectangle().getY() - 5; // Adjust the value to control the speed and direction
         redStick.getStickRectangle().setY(newY);
@@ -152,6 +169,7 @@ public class GameController {
     }
 
     private void dropStickAndAddNew() {
+        if(!gameover){
         // Set up a Rotate transform for the falling stick
         Rotate rotate = new Rotate();
         rotate.setPivotY(redStick.getStickRectangle().getY() + redStick.getStickRectangle().getHeight()); // Set pivot point to the bottom of the stick
@@ -173,10 +191,11 @@ public class GameController {
 
         // Play the timeline
         allAnims.add(timeline);
+        timeline.setOnFinished(event -> allAnims.remove(timeline));
         timeline.play();
         movehero();
 
-
+}
 
     }
 
@@ -217,6 +236,9 @@ public class GameController {
         this.allAnims.add(tl);
     }
 
+    public void remAnims(Timeline tl) {
+        this.allAnims.remove(tl);
+    }
     private Pillar addNewPillar(int dist, int ms) {
         // Example pillar creation, adjust as necessary
 
@@ -228,7 +250,7 @@ public class GameController {
     private void movehero(){
         double distanceToWalk = p2.getPillarRectangle().getLayoutX()+ p2.getPillarRectangle().getWidth()-jaadu.getJadu().getFitWidth();
         System.out.println("shoul dmmove to"+distanceToWalk);
-        if(!isStickAlignedWithNextPillar()){
+        if(!isStickAlignedWithNextPillar(false)){
             System.out.println("shoul dmmove to"+distanceToWalk);
             System.out.println("stick "+redStick.getStickRectangle().getHeight());
             distanceToWalk=jaadu.getJadu().getLayoutX()+redStick.getStickRectangle().getHeight()+jaadu.getJadu().getFitWidth();
@@ -240,7 +262,7 @@ public class GameController {
     }
 
     public void checkStickAlignment() {
-        if(isStickAlignedWithNextPillar()) {
+        if(isStickAlignedWithNextPillar(true)) {
             removeOldPillar();
             move2ndPillar();
             moveHeroTo2ndPillar();
@@ -262,7 +284,10 @@ public class GameController {
         travelTransition.play();
 
         // Falling animation after the horizontal movement
-        travelTransition.setOnFinished(event -> fallDown());
+        travelTransition.setOnFinished(event -> {
+            alltrans.remove(travelTransition);
+            fallDown();
+        });
     }
 
     private void fallDown() {
@@ -270,11 +295,12 @@ public class GameController {
         TranslateTransition fallTransition = new TranslateTransition(Duration.seconds(1), jaadu.getJadu());
         fallTransition.setToY(gamePane.getHeight()); // Fall to the bottom of the gamePane
         alltrans.add(fallTransition);
+        fallTransition.setOnFinished(event -> alltrans.remove(fallTransition));
         fallTransition.play();
     }
 
 
-    private boolean isStickAlignedWithNextPillar() {
+    private boolean isStickAlignedWithNextPillar(boolean bol) {
         // Calculate the right edge of the first pillar
         double p1RightEdge = p1.getPillarRectangle().getLayoutX() + p1.getPillarRectangle().getWidth();
 
@@ -288,16 +314,21 @@ public class GameController {
         // Check if the player is flipped and touching either pillar
         if (isFlipped && (isPlayerTouchingPillar(p1) || isPlayerTouchingPillar(p2))) {
             System.out.println("Player is flipped and touching a pillar.");
+            if(bol) new GameOverPopup(gamePane,this);
+            gameover=true;
             return false;
         }
 
         // Check if the stick, when laid down, spans from the right edge of p1 to anywhere within the width of p2
-        if (p1RightEdge + stickLength >= p2LeftEdge && p1RightEdge + stickLength <= p2RightEdge) {
+        if (p2LeftEdge-p1RightEdge<=stickLength && p2RightEdge-p1RightEdge>stickLength) {
             System.out.println("Stick is aligned with the next pillar.");
             score++;
+
             return true;
         } else {
             System.out.println("Stick is not aligned with the next pillar.");
+            if(bol) new GameOverPopup(gamePane,this);
+            gameover=true;
             return false;
         }
     }
@@ -346,6 +377,7 @@ public class GameController {
 //        timeline.setOnFinished(event -> );
 //                // Play the animation
         allAnims.add(timeline);
+        timeline.setOnFinished(event -> allAnims.remove(timeline));
 
         timeline.play();
 
@@ -360,7 +392,10 @@ public class GameController {
         transition.setByX(-500);
         alltrans.add(transition);
         transition.play();
-        transition.setOnFinished(event ->gamePane.getChildren().remove(p1.getPillarRectangle())
+        transition.setOnFinished(event -> {
+                    alltrans.remove(transition);
+                    gamePane.getChildren().remove(p1.getPillarRectangle());
+                }
         );
 
     }
@@ -378,6 +413,7 @@ public class GameController {
         alltrans.add(transition);
         transition.play();
         transition.setOnFinished(event -> {
+            alltrans.remove(transition);
             createNewPillar();
             canrotate=false;
         });
@@ -398,6 +434,7 @@ public class GameController {
 
 
     public void resetStick() {
+        redStick.getStickRectangle().setOpacity(0);
 
 
         redStick.getStickRectangle().getTransforms().clear();
@@ -516,6 +553,9 @@ public class GameController {
              ) {tl.pause();
 
         }
+        new PauseGamePopup(gamePane,this);
+
+        // show a pop up
     }
 
     public void resumeGame(){

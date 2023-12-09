@@ -77,18 +77,20 @@ public class StickHero implements serializable{
             timeline.setDelay(Duration.seconds(delaySeconds));
         }
 
+        ControlledBy.setAllAnims(timeline);
         // Set up action to perform after the animation finishes
         timeline.setOnFinished(event -> {
             PauseTransition pause = new PauseTransition(Duration.millis(900));
             pause.setOnFinished(delayedEvent -> {
                 ControlledBy.checkStickAlignment();
                 ControlledBy.resetStick();
+                ControlledBy.remAnims(timeline);
             });
             pause.play();
         });
 
         // Start the animation
-        ControlledBy.setAllAnims(timeline);
+
         timeline.play();
     }
 
