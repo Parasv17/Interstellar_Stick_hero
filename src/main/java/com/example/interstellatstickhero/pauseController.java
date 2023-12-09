@@ -22,6 +22,8 @@ public class pauseController {
         scene= new Scene(root);
         stage.setScene(scene);
         stage.show();
+
+
     }
     public void switchtoHomeScreen(MouseEvent event) throws IOException {
         root = FXMLLoader.load(getClass().getResource("homeScreen.fxml"));

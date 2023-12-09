@@ -88,6 +88,7 @@ public class StickHero implements serializable{
         });
 
         // Start the animation
+        ControlledBy.setAllAnims(timeline);
         timeline.play();
     }
 
