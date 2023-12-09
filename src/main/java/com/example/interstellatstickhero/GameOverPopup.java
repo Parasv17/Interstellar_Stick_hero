@@ -72,7 +72,13 @@ public class GameOverPopup {
         restartButton.setFitWidth(101);
         restartButton.setLayoutX(214);
         restartButton.setLayoutY(254);
-        restartButton.setOnMouseClicked(event -> restartGame());
+        restartButton.setOnMouseClicked(event -> {
+            try {
+                controller.switchtoMainScreen();
+            } catch (IOException e) {
+                throw new RuntimeException(e);
+            }
+        });
 
         // Exit game button
         exitButton = new ImageView(new Image(Main.class.getResourceAsStream("buttons-150552_640 3.png")));
