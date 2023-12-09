@@ -34,8 +34,8 @@ public class Pillar implements serializable{
         this.pillarRectangle.setLayoutY(otherPillar.pillarRectangle.getLayoutY());
         // Note: You might also want to copy other properties if they are used
     }
-    public Pillar(int positionX, int durationMillis) {
-        this.width = getRandomWidth(70, 150); // Random width between 70 and 150
+    public Pillar(int positionX, int durationMillis, int width) {
+        this.width = width ;// Random width between 70 and 150
         this.positionX = positionX ;// Random distance between 40 and 100
 
         pillarRectangle = new Rectangle(width, 150, Color.valueOf("#000000b9"));
@@ -52,7 +52,7 @@ public class Pillar implements serializable{
         fadeTransition.setToValue(1);   // End with fully opaque
         fadeTransition.play();
     }
-    private static int getRandomWidth(int min, int max) {
+    public static int getRandomWidth(int min, int max) {
         return random.nextInt(max - min + 1) + min;
     }
 

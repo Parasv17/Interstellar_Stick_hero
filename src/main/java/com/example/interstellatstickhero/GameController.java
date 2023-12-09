@@ -3,11 +3,14 @@ package com.example.interstellatstickhero;
 import javafx.animation.*;
 
 import javafx.application.Platform;
+import javafx.concurrent.ScheduledService;
+import javafx.concurrent.Task;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
+import javafx.scene.control.Label;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.Pane;
@@ -17,6 +20,8 @@ import javafx.stage.Stage;
 import javafx.util.Duration;
 import javafx.scene.image.ImageView;
 
+
+//import java.awt.*;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
@@ -81,6 +86,9 @@ public class GameController {
     private List<Rectangle> sticks;
     private boolean isIncreasing;
     private int score=0;
+    private ScheduledService<Void> collisionCheckService;
+
+    private int cherry=0;
 
     public GameController() {
         sticks = new ArrayList<>();
@@ -88,20 +96,45 @@ public class GameController {
     @FXML
     private ImageView Hero;
     private StickHero jaadu;
+
+    @FXML
+    private Label scoreCount;
+    @FXML
+    private Label cherryCount;
+    private Cherries spawnedCherry;
     public void initialize() {
         // Initialization logic here
+        isPaused=false;
         pillarStart();
         jaadu = new StickHero(Hero, this);
         redStick = new Stick(stick, this);
+        spawnRandomCherries();
+        collisionCheckService = new ScheduledService<Void>() {
+            @Override
+            protected Task<Void> createTask() {
+                return new Task<Void>() {
+                    @Override
+                    protected Void call() {
+                        checkForCherryCollision();
+                        return null;
+                    }
+                };
+            }
+        };
+
+        collisionCheckService.setPeriod(Duration.millis(100)); // check for collisions every 100 milliseconds
+        collisionCheckService.start();
 
 
-        // The call to setupKeyPressHandler is delayed until the scene is fully displayed
+
         gamePane.sceneProperty().addListener((observable, oldValue, newValue) -> {
             if (newValue != null) {
                 setupKeyPressHandler(newValue);
             }
         });
         resetAssets();
+        updateScore();
+        updateCherrycount();
     }
 
 
@@ -213,9 +246,18 @@ public class GameController {
 
     private Pillar p1;
     private Pillar p2;
+
+    public Pane getGamePane() {
+        return gamePane;
+    }
+
+    public void setGamePane(Pane gamePane) {
+        this.gamePane = gamePane;
+    }
+
     public void pillarStart(){
-        p1= addNewPillar(0,100);
-        p2= addNewPillar(250,200);
+        p1= addNewPillar(0,100,100);
+        p2= addNewPillar(250,200,Pillar.getRandomWidth(70,150));
 
 
     }
@@ -239,10 +281,10 @@ public class GameController {
     public void remAnims(Timeline tl) {
         this.allAnims.remove(tl);
     }
-    private Pillar addNewPillar(int dist, int ms) {
+    private Pillar addNewPillar(int dist, int ms, int w) {
         // Example pillar creation, adjust as necessary
 
-        Pillar newPillar = new Pillar(dist, ms); // Example parameters
+        Pillar newPillar = new Pillar(dist, ms,w); // Example parameters
         gamePane.getChildren().add(newPillar.getPillarRectangle());
         return newPillar;
     }
@@ -251,12 +293,12 @@ public class GameController {
         double distanceToWalk = p2.getPillarRectangle().getLayoutX()+ p2.getPillarRectangle().getWidth()-jaadu.getJadu().getFitWidth();
         System.out.println("shoul dmmove to"+distanceToWalk);
         if(!isStickAlignedWithNextPillar(false)){
-            System.out.println("shoul dmmove to"+distanceToWalk);
-            System.out.println("stick "+redStick.getStickRectangle().getHeight());
-            distanceToWalk=jaadu.getJadu().getLayoutX()+redStick.getStickRectangle().getHeight()+jaadu.getJadu().getFitWidth();
-            System.out.println("moving to"+distanceToWalk);
+
+            distanceToWalk=jaadu.getJadu().getLayoutX()+redStick.getStickRectangle().getHeight()+(jaadu.getJadu().getFitWidth())/2;
+
         }
         jaadu.moveHorizontally(distanceToWalk, 1);
+
 
 
     }
@@ -267,32 +309,16 @@ public class GameController {
             move2ndPillar();
             moveHeroTo2ndPillar();
         } else {
-            travelStickLengthAndFall();
-            // Handle the case where the stick does not reach the next pillar
-            // For example, make the hero fall, end the game, etc.
+            fallDown();
+//
         }
     }
 
-    private void travelStickLengthAndFall() {
-        double stickLength = redStick.getStickRectangle().getHeight();
-        double travelDistance = 0;
 
-        // Travel horizontally
-        TranslateTransition travelTransition = new TranslateTransition(Duration.seconds(1), jaadu.getJadu());
-        travelTransition.setToX(travelDistance);
-        alltrans.add(travelTransition);
-        travelTransition.play();
-
-        // Falling animation after the horizontal movement
-        travelTransition.setOnFinished(event -> {
-            alltrans.remove(travelTransition);
-            fallDown();
-        });
-    }
 
     private void fallDown() {
         // Falling animation
-        TranslateTransition fallTransition = new TranslateTransition(Duration.seconds(1), jaadu.getJadu());
+        TranslateTransition fallTransition = new TranslateTransition(Duration.millis(400), jaadu.getJadu());
         fallTransition.setToY(gamePane.getHeight()); // Fall to the bottom of the gamePane
         alltrans.add(fallTransition);
         fallTransition.setOnFinished(event -> alltrans.remove(fallTransition));
@@ -312,24 +338,50 @@ public class GameController {
         double stickLength = redStick.getStickRectangle().getHeight(); // Assuming the height is the length when laid down
 
         // Check if the player is flipped and touching either pillar
-        if (isFlipped && (isPlayerTouchingPillar(p1) || isPlayerTouchingPillar(p2))) {
+        if (isFlipped && ((isPlayerTouchingPillar(p1) || isPlayerTouchingPillar(p2))) && cherry < 2) {
             System.out.println("Player is flipped and touching a pillar.");
-            if(bol) new GameOverPopup(gamePane,this);
-            gameover=true;
-            return false;
+            if (bol) {
+                new GameOverPopup(gamePane, this, score, cherry);
+                gameover = true;
+                return false;
+            }
+        }
+        else if(isFlipped && ((isPlayerTouchingPillar(p1) || isPlayerTouchingPillar(p2))) && cherry>=2){
+            cherry-=2;
+            updateCherrycount();
+            return  true;
         }
 
         // Check if the stick, when laid down, spans from the right edge of p1 to anywhere within the width of p2
-        if (p2LeftEdge-p1RightEdge<=stickLength && p2RightEdge-p1RightEdge>stickLength) {
+        if (p2LeftEdge - p1RightEdge <= stickLength && p2RightEdge - p1RightEdge > stickLength) {
             System.out.println("Stick is aligned with the next pillar.");
-            score++;
+            if (bol) {
+                score++;
+                updateScore();
+            }
 
             return true;
-        } else {
+        } else if (cherry >= 2) {
+            if (bol) {
+                cherry -= 2;
+                updateCherrycount();
+                return true;
+            }
+            else {
+                return false;
+            }
+        }
+        else {
             System.out.println("Stick is not aligned with the next pillar.");
-            if(bol) new GameOverPopup(gamePane,this);
-            gameover=true;
-            return false;
+
+            if (bol) {
+                isPaused = true;
+                new GameOverPopup(gamePane, this, score, cherry);
+                gameover = true;
+                return false;
+            } else {
+                return false;
+            }
         }
     }
 
@@ -359,7 +411,7 @@ public class GameController {
         redStick.getStickRectangle().setLayoutX((double) (p1.getPillarRectangle().getWidth()-redStick.getStickRectangle().getWidth()));
 
         // Calculate the new layoutX position
-        jaadu.getJadu().setLayoutX(0.0);
+//        jaadu.getJadu().setLayoutX(0.0);
         double newLayoutX =(double) p2.getPillarRectangle().getWidth()-jaadu.getJadu().getFitWidth();
 //        double newLayoutX=;
 
@@ -403,21 +455,51 @@ public class GameController {
 
 
 
-    private void move2ndPillar() {
-        double distanceToMove = -p2.getPillarRectangle().getLayoutX();
-        TranslateTransition transition = new TranslateTransition(Duration.seconds(2), p2.getPillarRectangle());
-//        TranslateTransition stickTransition = new TranslateTransition(Duration.seconds(2),redStick.getStickRectangle());
-//        stickTransition.setByX(distanceToMove);
-        transition.setByX(distanceToMove);
-//        stickTransition.play();
-        alltrans.add(transition);
-        transition.play();
-        transition.setOnFinished(event -> {
-            alltrans.remove(transition);
-            createNewPillar();
-            canrotate=false;
-        });
-    }
+//    private void move2ndPillar() {
+//        double distanceToMove = -p2.getPillarRectangle().getLayoutX();
+//        TranslateTransition transition = new TranslateTransition(Duration.seconds(2), p2.getPillarRectangle());
+////        TranslateTransition stickTransition = new TranslateTransition(Duration.seconds(2),redStick.getStickRectangle());
+////        stickTransition.setByX(distanceToMove);
+//        transition.setByX(distanceToMove);
+//
+////        stickTransition.play();
+//        alltrans.add(transition);
+//        transition.play();
+//        transition.setOnFinished(event -> {
+//            alltrans.remove(transition);
+//            createNewPillar();
+//            canrotate=false;
+//        });
+//    }
+private void move2ndPillar() {
+    double distanceToMove = -p2.getPillarRectangle().getLayoutX();
+
+    // Create a KeyValue for moving the pillar
+    KeyValue movePillar = new KeyValue(p2.getPillarRectangle().layoutXProperty(), 0);
+
+    // Create a KeyValue for changing the width
+    KeyValue widthPillar = new KeyValue(p2.getPillarRectangle().widthProperty(), p1.getPillarRectangle().getWidth());
+
+    // Create a KeyFrame that contains both KeyValues and the duration
+    KeyFrame frame = new KeyFrame(Duration.seconds(2), movePillar, widthPillar);
+
+    // Create the Timeline with the KeyFrame
+    Timeline timeline = new Timeline(frame);
+
+    // Remove the transition from the list of all transitions
+    allAnims.add(timeline);
+
+    // Set up the on finished event handler
+    timeline.setOnFinished(event -> {
+        createNewPillar();
+        allAnims.remove(timeline);
+        canrotate = false;
+    });
+
+    // Start the animation
+    timeline.play();
+}
+
 //    public void resetStick() {
 //        // Create a RotateTransition for the stick's rotation
 //        RotateTransition rotateTransition = new RotateTransition(Duration.seconds(1), redStick.getStickRectangle());
@@ -438,6 +520,16 @@ public class GameController {
 
 
         redStick.getStickRectangle().getTransforms().clear();
+
+        try {
+            if (spawnedCherry != null) {
+                gamePane.getChildren().remove(spawnedCherry.getChImg());
+                spawnedCherry = null; // Reset to null after removing
+            }
+        } catch (Exception e) {
+            // Log the exception or handle it as needed
+            e.printStackTrace();
+        }
 
         // Reset the stick's height
 //        redStick.getStickRectangle().setHeight(redStick.getStickRectangle().getHeight());
@@ -473,6 +565,12 @@ public class GameController {
         redStick.getStickRectangle().setLayoutX(0.0);
         redStick.getStickRectangle().setLayoutX((double) (p1.getPillarRectangle().getWidth()-redStick.getStickRectangle().getWidth()));
         decreaseStickHeightFromTop();
+        PauseTransition pause = new PauseTransition(Duration.millis(900));
+        pause.setOnFinished(event -> {
+            spawnRandomCherries();
+
+        }); // Call resetStick2 after the delay
+        pause.play();
 //        redStick.getStickRectangle().setLayoutX(jaadu.getJadu().getLayoutX()+2*jaadu.getJadu().getFitWidth());
 //        redStick.getStickRectangle().setX(0);
 
@@ -487,17 +585,18 @@ public class GameController {
 //        System.out.println("p2 "+(double)p2.getPillarRectangle().getWidth());
         p1 =p2; // Shift the current pillar to be the old pillar
 
-        int dist = random.nextInt(600-170 + 1) + 170 ;// Calculate the distance for the new pillar
-        p2 = new Pillar(dist, 700); // Adjust duration as needed
+        int dist = random.nextInt(350-140 + 1) + 140 ;// Calculate the distance for the new pillar
+        p2 = new Pillar(dist, 300,Pillar.getRandomWidth(70,150)); // Adjust duration as needed
         gamePane.getChildren().add(p2.getPillarRectangle());
 
 
 //        System.out.println("addded nwe pillar!!!!!");
 //        System.out.println("p1"+ p1);
 //        System.out.println("'p2"+p2);
-        PauseTransition pause = new PauseTransition(Duration.millis(100));
+        PauseTransition pause = new PauseTransition(Duration.millis(300));
         pause.setOnFinished(event -> {
             resetStick2();
+
         }); // Call resetStick2 after the delay
         pause.play(); // Start the pause
 //
@@ -531,15 +630,17 @@ public class GameController {
 
 
     public void flipPlayer() {
-        isFlipped=(!isFlipped);
+        isFlipped = !isFlipped;
+
         Rotate rotate = new Rotate();
-        rotate.setPivotX(jaadu.getJadu().getX()+jaadu.getJadu().getFitWidth());
-        rotate.setPivotY(jaadu.getJadu().getY() + jaadu.getJadu().getFitHeight());
-        // Set pivot point to the bottom of the stick
+        double pivotX = jaadu.getJadu().getX() + jaadu.getJadu().getFitWidth() / 2;
+        double pivotY = jaadu.getJadu().getY() + jaadu.getJadu().getFitHeight();
+
+        rotate.setPivotX(pivotX);
+        rotate.setPivotY(pivotY);
 
         jaadu.getJadu().getTransforms().add(rotate);
         rotate.setAngle(180);
-
     }
 
     public void pauseGame(){
@@ -553,7 +654,8 @@ public class GameController {
              ) {tl.pause();
 
         }
-        new PauseGamePopup(gamePane,this);
+        new PauseGamePopup(gamePane,this,score,cherry);
+        collisionCheckService.cancel();
 
         // show a pop up
     }
@@ -570,10 +672,53 @@ public class GameController {
         ) {tl.play();
 
         }
+        if (!collisionCheckService.isRunning()) {
+            collisionCheckService.restart();
+        }
+    }
+    private void updateScore(){
+
+        scoreCount.setText(String.valueOf(score));
     }
 
 
 
+    private void spawnRandomCherries(){
+        Double upper=p2.getPillarRectangle().getLayoutX();
+        Double lower=104.00;
+        System.out.println("bound "+(upper-lower+1));
+        Double chlayx= random.nextDouble(upper-lower+1)+lower;
+//        System.out.println("layout x "+chlayx);
+        spawnedCherry= new Cherries(this,chlayx-50.00);
+        checkForCherryCollision();
+
+
+
+//        Double chlayx= random.nextDouble(-+1)+p1.getPillarRectangle().getLayoutX() + p1.getPillarRectangle().getWidth();
+//        spawnedCherry= new Cherries(this,chlayx);
+
+
+    }
+
+    private void checkForCherryCollision() {
+        Platform.runLater(() -> {
+            if (spawnedCherry != null) {
+                ImageView cherryImageView = spawnedCherry.getChImg();
+                if (jaadu.getJadu().getBoundsInParent().intersects(cherryImageView.getBoundsInParent())) {
+                    gamePane.getChildren().remove(cherryImageView); // Remove from the scene
+                    spawnedCherry = null; // Clear the reference
+                    cherry++; // Increment cherry count
+                    updateCherrycount(); // Update the count display
+                }
+            }
+        });
+    }
+
+    private void updateCherrycount() {
+        Platform.runLater(() -> {
+            cherryCount.setText(String.valueOf(cherry));
+        });
+    }
 
 }
 

@@ -12,15 +12,19 @@ import java.io.IOException;
 
 public class GameOverPopup {
 
+    private int score;
+    private  int cherry;
     private Pane gamePane;
     private GameController controller;
     private Rectangle background;
     private Label gameOverLabel, scoreLabel, scoreValue, powerUpCount;
     private ImageView powerUpIcon, restartButton, exitButton;
 
-    public GameOverPopup(Pane gamePane, GameController cont) {
+    public GameOverPopup(Pane gamePane, GameController cont, int score,int cherry) {
         this.gamePane = gamePane;
         this.controller = cont;
+        this.cherry= cherry;
+        this.score= score;
         createPopup();
     }
 
@@ -46,22 +50,22 @@ public class GameOverPopup {
         scoreLabel.setTextFill(Color.web("#ffd01c"));
 
         // Score value
-        scoreValue = new Label("12"); // Replace with actual score
+        scoreValue = new Label(String.valueOf(score)); // Replace with actual score
         scoreValue.setLayoutX(452);
         scoreValue.setLayoutY(128);
         scoreValue.setFont(new Font("Rockwell Extra Bold", 42));
         scoreValue.setTextFill(Color.web("#ffd01c"));
 
         // Power-up icon
-        powerUpIcon = new ImageView(new Image(Main.class.getResourceAsStream("6640_prev_ui.png")));
+        powerUpIcon = new ImageView(new Image(Main.class.getResourceAsStream("cherry.png")));
         powerUpIcon.setFitHeight(48);
         powerUpIcon.setFitWidth(55);
         powerUpIcon.setLayoutX(325);
         powerUpIcon.setLayoutY(178);
 
         // Power-up count
-        powerUpCount = new Label("4"); // Replace with actual count
-        powerUpCount.setLayoutX(465);
+        powerUpCount = new Label(String.valueOf(cherry)); // Replace with actual count
+        powerUpCount.setLayoutX(452);
         powerUpCount.setLayoutY(178);
         powerUpCount.setFont(new Font("Rockwell Extra Bold", 44));
         powerUpCount.setTextFill(Color.WHITE);

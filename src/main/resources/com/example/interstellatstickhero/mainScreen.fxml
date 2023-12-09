@@ -14,14 +14,9 @@
                 <Image url="@main.png" />
             </image>
         </ImageView>
-        <ImageView fitHeight="36.0" fitWidth="47.0" layoutX="166.0" layoutY="269.0" pickOnBounds="true" preserveRatio="true">
-            <image>
-                <Image url="@6640_prev_ui.png" />
-            </image>
-        </ImageView>
         <ImageView fitHeight="50.0" fitWidth="53.0" layoutX="678.0" layoutY="17.0" pickOnBounds="true" preserveRatio="true">
             <image>
-                <Image url="@6640_prev_ui.png" />
+                <Image url="@cherry.png" />
             </image>
         </ImageView>
         <ImageView fitHeight="51.0" fitWidth="47.0" layoutX="14.0" layoutY="14.0" onMouseClicked="#switchtoPauseScreen" pickOnBounds="true" preserveRatio="true">
@@ -29,7 +24,7 @@
                 <Image url="@buttons-150552_640%201.png" />
             </image>
         </ImageView>
-      <Label layoutX="347.0" layoutY="38.0" prefHeight="117.0" prefWidth="107.0" text="12" textFill="#dd5800">
+      <Label fx:id="scoreCount" layoutX="347.0" layoutY="38.0" prefHeight="117.0" prefWidth="107.0" text="12" textFill="#dd5800">
          <font>
             <Font name="ROGFonts-Regular" size="61.0" />
          </font>
@@ -39,7 +34,7 @@
                   <Image url="@char.png" />
               </image>
           </ImageView>
-      <Label layoutX="623.0" layoutY="4.0" prefHeight="70.0" prefWidth="47.0" text="4" textFill="#fcc000">
+      <Label fx:id="cherryCount" layoutX="623.0" layoutY="4.0" prefHeight="70.0" prefWidth="47.0" text="4" textFill="#fcc000">
          <font>
             <Font name="ROGFonts-Regular" size="39.0" />
          </font>
