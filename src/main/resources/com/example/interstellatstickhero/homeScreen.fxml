@@ -13,14 +13,14 @@
             <Image url="@home.png" />
          </image>
         </ImageView>
-        <ImageView fitHeight="88.0" fitWidth="120.0" layoutX="177.0" layoutY="253.0" onMouseClicked="#switchtoMainScreen" pickOnBounds="true" preserveRatio="true">
+        <ImageView fitHeight="88.0" fitWidth="120.0" layoutX="116.0" layoutY="253.0" onMouseClicked="#switchtoMainScreen" pickOnBounds="true" preserveRatio="true">
             <image>
-                <Image url="@buttons-150552_640%202.png" />
+                <Image url="@buttons-150552_640_2.png" />
             </image>
         </ImageView>
-        <ImageView fitHeight="150.0" fitWidth="148.0" layoutX="420.0" layoutY="227.0" pickOnBounds="true" preserveRatio="true">
+        <ImageView fitHeight="150.0" fitWidth="148.0" layoutX="484.0" layoutY="227.0" onMouseClicked="#switchtoMainWithLoadScreen" pickOnBounds="true" preserveRatio="true">
             <image>
-                <Image url="@loasd%203_prev_ui.png" />
+                <Image url="@loasd_3_prev_ui.png" />
             </image>
         </ImageView>
       <Label layoutX="120.0" layoutY="35.0" prefHeight="116.0" prefWidth="529.0" text="INTERSTELLAR" textFill="#f2f2f2">
@@ -31,6 +31,21 @@
       <Label layoutX="177.0" layoutY="91.0" prefHeight="136.0" prefWidth="391.0" text="STICK HERO" textFill="WHITE">
          <font>
             <Font name="ROGFonts-Regular" size="49.0" />
+         </font>
+      </Label>
+      <Label layoutX="313.0" layoutY="204.0" prefHeight="47.0" prefWidth="120.0" text="High " textFill="#0a0808">
+         <font>
+            <Font name="ROGFonts-Regular" size="28.0" />
+         </font>
+      </Label>
+      <Label layoutX="299.0" layoutY="301.0" text="Score" textFill="#070404">
+         <font>
+            <Font name="ROGFonts-Regular" size="28.0" />
+         </font>
+      </Label>
+      <Label fx:id="HSC" layoutX="334.0" layoutY="244.0" prefHeight="68.0" prefWidth="82.0" text="0" textFill="RED">
+         <font>
+            <Font name="ROGFonts-Regular" size="48.0" />
          </font>
       </Label>
     </children>

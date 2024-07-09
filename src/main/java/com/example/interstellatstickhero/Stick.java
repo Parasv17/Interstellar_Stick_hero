@@ -2,33 +2,43 @@ package com.example.interstellatstickhero;
 
 import javafx.scene.shape.Rectangle;
 
-public class Stick implements serializable{
-    private Rectangle StickRectangle;
-    private GameController ControlledBy;
+import java.io.Serializable;
 
+public class Stick implements Serializable {
+    private static Stick instance;
+    private Rectangle stickRectangle;
+    private GameController controlledBy;
+    private int length;
+    private boolean isPowerUp;
+
+    Stick(Rectangle stickRectangle, GameController cont) {
+        this.controlledBy = cont;
+        this.stickRectangle = stickRectangle;
+    }
+
+    public static Stick getInstance(Rectangle stickRectangle, GameController cont) {
+        if (instance == null) {
+            instance = new Stick(stickRectangle, cont);
+        }
+        return instance;
+    }
+
+    // Getters and setters
     public Rectangle getStickRectangle() {
-        return StickRectangle;
+        return stickRectangle;
     }
 
     public void setStickRectangle(Rectangle stickRectangle) {
-        StickRectangle = stickRectangle;
+        this.stickRectangle = stickRectangle;
     }
 
     public GameController getControlledBy() {
-        return ControlledBy;
+        return controlledBy;
     }
 
     public void setControlledBy(GameController controlledBy) {
-        ControlledBy = controlledBy;
+        this.controlledBy = controlledBy;
     }
-
-    public Stick(Rectangle stickRectangle, GameController cont) {
-        this.ControlledBy= cont;
-        StickRectangle = stickRectangle;
-    }
-
-    private int length ;
-    private boolean isPowerUp;
 
     public int getLength() {
         return length;
@@ -43,10 +53,10 @@ public class Stick implements serializable{
     }
 
     public void setPowerUp(boolean powerUp) {
-        isPowerUp = powerUp;
+        this.isPowerUp = powerUp;
     }
 
-    public void growNDropStick(){
-
+    public void growNDropStick() {
+        // Implementation...
     }
 }

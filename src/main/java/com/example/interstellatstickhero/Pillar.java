@@ -1,7 +1,6 @@
 package com.example.interstellatstickhero;
 
 import javafx.animation.FadeTransition;
-import javafx.animation.TranslateTransition;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Rectangle;
 import javafx.scene.shape.StrokeType;
@@ -19,8 +18,6 @@ public class Pillar implements serializable{
         this.positionX = otherPillar.positionX;
         this.bonusLength = otherPillar.bonusLength;
         this.bonusPositionX = otherPillar.bonusPositionX;
-
-        // Create a new Rectangle with the same properties
         this.pillarRectangle = new Rectangle(
                 otherPillar.pillarRectangle.getWidth(),
                 otherPillar.pillarRectangle.getHeight(),
@@ -32,12 +29,10 @@ public class Pillar implements serializable{
         this.pillarRectangle.setStrokeWidth(otherPillar.pillarRectangle.getStrokeWidth());
         this.pillarRectangle.setLayoutX(otherPillar.pillarRectangle.getLayoutX());
         this.pillarRectangle.setLayoutY(otherPillar.pillarRectangle.getLayoutY());
-        // Note: You might also want to copy other properties if they are used
     }
     public Pillar(int positionX, int durationMillis, int width) {
-        this.width = width ;// Random width between 70 and 150
-        this.positionX = positionX ;// Random distance between 40 and 100
-
+        this.width = width ;
+        this.positionX = positionX ;
         pillarRectangle = new Rectangle(width, 150, Color.valueOf("#000000b9"));
         pillarRectangle.setArcWidth(5.0);
         pillarRectangle.setArcHeight(5.0);
@@ -46,10 +41,9 @@ public class Pillar implements serializable{
         pillarRectangle.setStrokeWidth(0.0);
         pillarRectangle.setLayoutX(this.positionX);
         pillarRectangle.setLayoutY(269.0);
-
         FadeTransition fadeTransition = new FadeTransition(Duration.millis(durationMillis), pillarRectangle);
-        fadeTransition.setFromValue(0); // Start from fully transparent
-        fadeTransition.setToValue(1);   // End with fully opaque
+        fadeTransition.setFromValue(0);
+        fadeTransition.setToValue(1);
         fadeTransition.play();
     }
     public static int getRandomWidth(int min, int max) {
